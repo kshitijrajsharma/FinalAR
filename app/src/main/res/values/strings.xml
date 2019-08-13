@@ -3,4 +3,12 @@
     <string name="close">X</string>
     <string name="description">This applicatoin is designed for the purpose of fulfillment of final year project Examination. We are stilll on Test Phase. @CopyRight:GroupDIRA</string>
 
+    <string-array name="array" color="white">
+        <item>1. Kshitizraj Sharma(BGE517)</item>
+        <item>2. Sovas Tiwari(BGE537)</item>
+        <item>3. Bimala Sigdel(BGE511)</item>
+        <item>4. Namuna Nyaupane(BGE522)</item>
+        <item>5. Bibek Dhakal(BGE509)</item>
+        <item>6. Bijaya Adhikari(BGE510)</item>
+    </string-array>
 </resources>

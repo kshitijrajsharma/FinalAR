@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
         imageView.setVisibility(View.GONE);
 
 
-        bgapp.animate().translationY(-1600).setDuration(2100).setStartDelay(2100);
+        bgapp.animate().translationY(-1400).setDuration(2100).setStartDelay(2100);
         clover.animate().alpha(0).setDuration(1000).setStartDelay(2000);
         textsplash.animate().translationY(500).alpha(0).setDuration(2000).setStartDelay(1500);
         frombottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);

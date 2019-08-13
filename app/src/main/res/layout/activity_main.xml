@@ -136,7 +136,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginBottom="4dp"
-                    android:src="@drawable/bellcon" />
+                    android:src="@drawable/indoor" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -226,12 +226,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="143dp"
-        android:layout_height="197dp"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
         android:layout_gravity="end"
         android:src="@drawable/minions"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="0dp" />
+
 
 
 </android.support.constraint.ConstraintLayout>
