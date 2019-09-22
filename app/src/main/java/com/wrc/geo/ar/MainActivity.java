@@ -2,18 +2,33 @@ package com.wrc.geo.ar;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
 
 
 public class MainActivity extends Activity {
@@ -21,6 +36,20 @@ public class MainActivity extends Activity {
     ImageView bgapp, clover,imageView;
     LinearLayout textsplash, texthome, menus;
     Animation frombottom,fromleft;
+    private static final String TAG = "MainActivity";
+    private static final String[] PERMISSIONS = {android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
+    private static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +65,13 @@ public class MainActivity extends Activity {
         texthome.setVisibility(View.GONE);
         imageView.setVisibility(View.GONE);
 
+        ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, 112);
 
-        bgapp.animate().translationY(-1400).setDuration(2100).setStartDelay(2100);
+
+
+        bgapp.animate().translationY(-1750).setDuration(4000).setStartDelay(2100);
         clover.animate().alpha(0).setDuration(1000).setStartDelay(2000);
-        textsplash.animate().translationY(500).alpha(0).setDuration(2000).setStartDelay(1500);
+        textsplash.animate().translationY(500).alpha(0).setDuration(4000).setStartDelay(3000);
         frombottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
         fromleft=AnimationUtils.loadAnimation(this,R.anim.fromleft);
         clover.startAnimation(fromleft);
@@ -60,7 +92,7 @@ public class MainActivity extends Activity {
                 imageView.setVisibility(View.VISIBLE);
                 imageView.startAnimation(fromleft);
             }
-        }, 6000);
+        }, 7000);
         myDialog = new Dialog(this);
 
 
@@ -80,6 +112,7 @@ public class MainActivity extends Activity {
             super.startActivity(launchIntent);//null pointer check in case package name was not found
         }
     }
+
     public void ShowPopup(View v) {
         TextView txtclose;
         Button btnFollow;
@@ -87,6 +120,15 @@ public class MainActivity extends Activity {
         txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
         txtclose.setText("X");
         btnFollow = (Button) myDialog.findViewById(R.id.btnfollow);
+        btnFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://www.facebook.com/sharma.kshitizraj?ref=bookmarks";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
         txtclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +137,102 @@ public class MainActivity extends Activity {
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
+    }
+    public void request(View view) {
+
+        ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, 112);
+
+    }
+
+    public void view(View view) {
+        Log.v(TAG, "view() Method invoked ");
+
+        if (!hasPermissions(MainActivity.this, PERMISSIONS)) {
+
+            Log.v(TAG, "download() Method DON'T HAVE PERMISSIONS ");
+
+            Toast t = Toast.makeText(getApplicationContext(), "You don't have read access !", Toast.LENGTH_LONG);
+            t.show();
+
+        } else {
+            File d = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);  // -> filename = maven.pdf
+            File pdfFile = new File(d, "maven.pdf");
+
+            Log.v(TAG, "view() Method pdfFile " + pdfFile.getAbsolutePath());
+
+            Uri path = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", pdfFile);
+
+
+            Log.v(TAG, "view() Method path " + path);
+
+            Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+            pdfIntent.setDataAndType(path, "application/pdf");
+            pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            pdfIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            try {
+                startActivity(pdfIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(MainActivity.this, "No Application available to view PDF", Toast.LENGTH_SHORT).show();
+            }
+        }
+        Log.v(TAG, "view() Method completed ");
+
+    }
+
+    public void download(View view) {
+        Log.v(TAG, "download() Method invoked ");
+
+        if (!hasPermissions(MainActivity.this, PERMISSIONS)) {
+
+            Log.v(TAG, "download() Method DON'T HAVE PERMISSIONS ");
+
+            Toast t = Toast.makeText(getApplicationContext(), "You don't have write access !", Toast.LENGTH_LONG);
+            t.show();
+
+        } else {
+            Log.v(TAG, "download() Method HAVE PERMISSIONS ");
+
+            //new DownloadFile().execute("http://maven.apache.org/maven-1.x/maven.pdf", "maven.pdf");
+            new DownloadFile().execute("http://www.axmag.com/download/pdfurl-guide.pdf", "maven.pdf");
+
+        }
+
+        Log.v(TAG, "download() Method completed ");
+
+    }
+
+    private class DownloadFile extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            Log.v(TAG, "doInBackground() Method invoked ");
+
+            String fileUrl = strings[0];   // -> http://maven.apache.org/maven-1.x/maven.pdf
+            String fileName = strings[1];  // -> maven.pdf
+            String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+            File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+            File pdfFile = new File(folder, fileName);
+            Log.v(TAG, "doInBackground() pdfFile invoked " + pdfFile.getAbsolutePath());
+            Log.v(TAG, "doInBackground() pdfFile invoked " + pdfFile.getAbsoluteFile());
+
+            try {
+                pdfFile.createNewFile();
+                Log.v(TAG, "doInBackground() file created" + pdfFile);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "doInBackground() error" + e.getMessage());
+                Log.e(TAG, "doInBackground() error" + e.getStackTrace());
+
+
+            }
+            FileDownloader.downloadFile(fileUrl, pdfFile);
+            Log.v(TAG, "doInBackground() file download completed");
+
+            return null;
+        }
     }
 
 
