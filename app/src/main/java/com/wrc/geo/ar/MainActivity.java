@@ -37,21 +37,21 @@ public class MainActivity extends Activity {
     LinearLayout textsplash, texthome, menus;
     Animation frombottom,fromleft;
 
-    String URL = "http://www.axmag.com/download/pdfurl-guide.pdf";
+    String URL = "https://www.mdpi.com/2078-2489/10/1/12/pdf";
     private static final String TAG = "MainActivity";
     private static final String[] PERMISSIONS = {android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
 
-//    private static boolean hasPermissions(Context context, String... permissions) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-//            for (String permission : permissions) {
-//                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
-//    }
+    private static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,17 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                new DownloadTask(MainActivity.this, URL);
+                if (!hasPermissions(MainActivity.this, PERMISSIONS)) {
+
+                    Log.v(TAG, "download() Method DON'T HAVE PERMISSIONS ");
+
+                    Toast t = Toast.makeText(getApplicationContext(), "You don't have read access !", Toast.LENGTH_LONG);
+                    t.show();
+                }
+                else{
+                    new DownloadTask(MainActivity.this, URL);
+                }
+
             }
         });
 

@@ -70,7 +70,7 @@ public class DownloadTask {
 
                     alertDialogBuilder.setNegativeButton("Open report",new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            File pdfFile = new File(Environment.getExternalStorageDirectory() + "/CodePlayon/" + downloadFileName);  // -> filename = maven.pdf
+                            File pdfFile = new File(Environment.getExternalStorageDirectory() + "/GeoAR/" + downloadFileName);  // -> filename = maven.pdf
                             Uri path = Uri.fromFile(pdfFile);
                             Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
                             pdfIntent.setDataAndType(path, "application/pdf");
@@ -134,7 +134,7 @@ public class DownloadTask {
                 //Get File if SD card is present
                 if (new CheckForSDCard().isSDCardPresent()) {
 
-                    apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "CodePlayon");
+                    apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "GeoAR");
                 } else
                     Toast.makeText(context, "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
 
