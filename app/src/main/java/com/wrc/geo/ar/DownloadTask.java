@@ -61,16 +61,16 @@ public class DownloadTask {
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
                     alertDialogBuilder.setTitle("Document  ");
                     alertDialogBuilder.setMessage("Document Downloaded Successfully ");
-                    alertDialogBuilder.setCancelable(false);
+                    alertDialogBuilder.setCancelable(true);
                     alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
 
                         }
                     });
 
-                    alertDialogBuilder.setNegativeButton("Open report",new DialogInterface.OnClickListener() {
+                    alertDialogBuilder.setNegativeButton("Open",new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            File pdfFile = new File(Environment.getExternalStorageDirectory() + "/GeoAR/" + downloadFileName);  // -> filename = maven.pdf
+                            File pdfFile = new File(Environment.getExternalStorageDirectory() + "/GeoAR/" + downloadFileName+".pdf");  // -> filename = maven.pdf
                             Uri path = Uri.fromFile(pdfFile);
                             Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
                             pdfIntent.setDataAndType(path, "application/pdf");
@@ -121,6 +121,7 @@ public class DownloadTask {
                 URL url = new URL(downloadUrl);//Create Download URl
                 HttpURLConnection c = (HttpURLConnection) url.openConnection();//Open Url Connection
                 c.setRequestMethod("GET");//Set Request Method to "GET" since we are grtting data
+                c.setDoOutput(true);
                 c.connect();//connect the URL Connection
 
                 //If Connection response is not OK then show Logs
@@ -144,7 +145,7 @@ public class DownloadTask {
                     Log.e(TAG, "Directory Created.");
                 }
 
-                outputFile = new File(apkStorage, downloadFileName);//Create Output file in Main File
+                outputFile = new File(apkStorage, downloadFileName+".pdf");//Create Output file in Main File
 
                 //Create New File if not present
                 if (!outputFile.exists()) {
