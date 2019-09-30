@@ -120,14 +120,25 @@ public class MainActivity extends Activity {
         {
             Intent launchIntent = getPackageManager().getLaunchIntentForPackage("krs.ar.outar");
             if (launchIntent != null) {
-                super.startActivity(launchIntent);//null pointer check in case package name was not found
+                super.startActivity(launchIntent);
+                //null pointer check in case package name was not found
+            }
+            else{
+                Toast t = Toast.makeText(getApplicationContext(), "Please Download Outdoor Plugin First !", Toast.LENGTH_LONG);
+                t.show();
             }
         }
     public void indoor                                                                                                                                                                                      (View view)
     {
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.ar.indoor");
         if (launchIntent != null) {
-            super.startActivity(launchIntent);//null pointer check in case package name was not found
+            super.startActivity(launchIntent);
+
+            //null pointer check in case package name was not found
+        }
+        else {
+            Toast t = Toast.makeText(getApplicationContext(), "Please Download Indoor Plugin First !", Toast.LENGTH_LONG);
+            t.show();
         }
     }
 
